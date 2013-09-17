@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- basic drawing capability taken from url=(0040)http://bl.ocks.org/mbostock/raw/2429963/ -->
+<!-- some tree stuff inspired by https://gist.github.com/kueda/1036776 -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8">
+		<title>pandemix</title>
+        <!-- <link rel="stylesheet" href="css/bootstrap-responsive.css"> -->
+		<link rel="stylesheet" type="text/css" href="css/pandemix.css">
+        <link rel="stylesheet" type="text/css" href="css/leaflet.css" />
+
+        <script src="javascript/jquery-2.0.2.js"></script>
+		    <script src="javascript/d3.v3.min.js"></script>
+        <script src="javascript/crossfilter.min.js"></script>
+        <script src="javascript/leaflet.js"></script>
+
+		<script src="javascript/pandemix.js"></script>
+        <script src="javascript/timePanel.js"></script>
+        <script src="javascript/mapPanel.js"></script>
+        <script src="javascript/treePanel.js"></script>
+        <script src="javascript/tablePanel.js"></script>
+        <script src="javascript/traitPanel.js"></script>
+        <script src="javascript/traitSelectionPanel.js"></script>
+        <script src="javascript/legendPanel.js"></script>
+
+        <script src="javascript/regionOutlineMapLayer.js"></script>        
+        <script src="javascript/locationMapLayer.js"></script> 
+        <script src="javascript/virusParticleMapLayer.js"></script> 
+        <script src="javascript/bubbleChartMapLayer.js"></script> 
+        <script src="javascript/bubbleTransMapLayer.js"></script>
+        <script src="javascript/treeMapLayer.js"></script>
+
+<!--		<script src="javascript/allMin.js"></script> -->
+
+        <script src="javascript/collabsible.js"></script>
+
+<style>
+
+body {
+	font-family: Helvetica,Arial,sans-serif;
+	font-weight: 200;
+    font-size: 12px;
+  	width: 960px;
+}
+
+.treePanel {
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10 */
+    -o-user-select: none;
+    user-select: none;
+}
+
+.legendPanel {
+	width: 200px;
+	border: none;
+}
+
+#map {
+  width: 640px;
+  height: 500px;
+}
+
+.treePanel.svgBox {
+    width: 750px;
+    height: 345px;
+}
+
+.link {
+    stroke-width: 2px;
+}
+
+
+</style>
+
+    <style type="text/css">
+	/* styling for leaflet map */
+		.leaflet-control-zoom {
+			box-shadow: 0 0px;
+            background: white;
+            background: rgba(255,255,255,0.8);
+			border-style: solid;
+            border-width: 1px;
+            border-color: #CCCCCC;
+            border-radius: 5px;
+		}
+		
+	</style>
+
+    <style type="text/css">
+  	/* styling for collapsible panels; */
+  
+		.panel, .panelcollapsed 
+		{
+			margin-top: 5px;
+			/*border: 1px solid #999;
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;*/
+		}
+
+		/* panel heading */
+		.panel h2, .panelcollapsed h2 
+		{
+			font-size: 14px;
+			font-weight: 300;
+			margin: 0px;
+			padding: 4px;
+			padding-left: 20px;
+		/*	background: #EEEEEE; */
+			background-image:url('img/arrow-up.gif');
+			background-repeat:no-repeat;
+			background-position: left center;
+			border-top: 1px solid #CCC;
+		/*	border-bottom: 1px solid #CCC;
+			border-right: 1px solid #CCC;
+			border-left: 1px solid #CCC;
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+			*/
+		}
+
+		/* panel heading on rollover */
+		.panel h2:hover, .panelcollapsed h2:hover { background-color: #F5F7F9; }
+
+		/* heading of a collapsed panel */
+		.panelcollapsed h2 
+		{
+		/*	background: #DDDDDD; */
+			background-image:url('img/arrow-dn.gif');
+			background-repeat:no-repeat;
+			background-position: left center;
+			border-color: #CCC;
+		}
+
+		/* panel content - do not set borders or paddings */
+		.panelcontent 
+		{ 
+			background: #FFFFFF; 
+			overflow: hidden;
+		}
+
+		/* collapsed panel content */
+		.panelcollapsed .panelcontent { display: none; }
+
+    </style>
+
+	</head>
+<body>
+
+<h3>MERS-CoV <span class="date-calendar"></span></h3>
+<div>
+	<div id="playPause" style="display: inline-block; margin-right: 10px"></div>
+	<div id="globalTime" style="display: inline-block"></div>
+</div>
+<div class="panel">
+  <h2>Map: <span class="date-calendar"></span></h2>
+  <div class="panelcontent">
+  		<div>
+			<div id="map" style="display: inline-block"></div>
+			<div id="legend" style="display: inline-block; vertical-align:top" ></div>
+		</div>
+		<button id="map-reset">Reset Map</button>
+		<button id="show-locations">Show Locations</button>
+  </div>
+</div>
+<div class="panel" style="margin-top: 5px">
+  <h2>Tree</h2>
+  <div class="panelcontent">
+  	<div>
+		<div id="search" style="display: inline"></div>
+		<div id="color" style="display: inline"></div>
+	</div>
+  	<div>
+		<div id="zoom" style="display: inline-block"></div>
+		<div id="tree1" style="display: inline-block"></div>
+	</div>
+  </div>
+</div>
+
+
+<script>
+    //script wrapped in a function to avoid polluting namespace
+    (function() {
+        var i,
+            contourFile = "data/MERS-CoV/reducedGeography.json",
+            centroidFile = "data/MERS-CoV/locations.csv",
+            tileSource = "http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/998/256/{z}/{x}/{y}.png",
+            inputFiles = ["data/MERS-CoV/MERS-CoV_25.json"];
+
+        var mapPanel = new pandemix.MapPanel;
+        mapPanel.placePanel({target: "map", initCoords: [25.3833, 49.5833], initZoom: 5})
+                .addTileLayer(tileSource)
+                //.loadContours(contourFile)
+                .loadCentroids(centroidFile)
+                .addInfoDisplay(function(d) {return "<h4>" + d.location + "</h4>" + d.number + (d.number > 1 ? " lineages" : " lineage")})
+                //.addLayer({layerType: pandemix.map.regionOutlineLayer, name: "Regions"})
+                .addLayer({layerType: pandemix.map.locationLayer, name: "Locations", displayedProperty: "location", unitRadius: 0.5, minRadius: 1, maxRadius: 50});
+
+		$( "#map-reset" ).click(function() {
+			mapPanel.getMap().setView([25.3833, 49.5833], 5);
+		});
+		$( "#show-locations" ).click(function() {
+			pandemix.selectTrait("location");
+		});
+
+        pandemix.addSearchBox({target: "#search"});
+        pandemix.addColorPicker({target: "#color"});
+        pandemix.addGlobalZoomButton({target: "#zoom", zoomAmount: 1});
+		pandemix.addPlayPauseButton({target: "#playPause", updateInterval: 200, updateStep: 10});
+
+        // var traitSelectionPanel = new pandemix.TraitSelectionPanel;
+    	// traitSelectionPanel.placePanel({target: "#traitSelection"});
+
+        var legendPanel = new pandemix.LegendPanel;
+        legendPanel.placePanel({target: "#legend"});
+
+        var timePanel = new pandemix.TimePanel;
+        timePanel.placePanel({target: "#globalTime"});
+        
+        pandemix.initializeCrossfilter();
+
+        //read each input file and draw the tree in its own div
+        for (i = 0; i < inputFiles.length; i += 1) {
+            var f = inputFiles[i];                
+
+            (function() {
+                //this call is wrappend in a closure so that each call to "when"
+                //would receive the correct reference to the tree panel created
+                var treePanel = new pandemix.TreePanel;
+                treePanel.placePanel("#tree" + (i + 1));
+          		treePanel.initializePanelData({file: f, color: pandemix.getHSBColor(i, inputFiles.length)});
+
+				mapPanel.addLayer({layerType: pandemix.map.treeLayer, treePanel: treePanel, name: "Tree", color: treePanel.getColor()})
+
+            })();            
+        }
+
+		mapPanel.addLayer({layerType: pandemix.map.bubbleTransLayer, name: "Bubble transitions", radius: 1})
+                .addLayer({layerType: pandemix.map.bubbleChartLayer, name: "Bubble chart", unitRadius: 1});
+
+		pandemix.when(function() {
+				pandemix.panelsLoaded("treePanel");
+			}, function() {
+				pandemix.selectTrait("location");
+			}, 100);
+
+	})();
+</script>
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

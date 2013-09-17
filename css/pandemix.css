@@ -1,0 +1,321 @@
+/*Tree styling*/
+.node {
+    fill-opacity: 0;
+}
+
+.highlighted {
+    fill-opacity: 0.3;
+    fill: orange;
+}
+
+.leafText {
+    fill: black;
+    fill-opacity: 1;
+    alignment-baseline: middle;
+    pointer-events: none;
+}
+
+.link {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+}
+
+.link.highlighted {
+	fill: none;
+	stroke: orange;
+	stroke-width: 2px;
+}
+
+.dashedLink {
+	fill: none;
+	stroke: gray;
+	stroke-width: 1px;
+	stroke-dasharray: 1, 3;
+}
+
+.rootLink {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+}
+
+#extent {
+    pointer-events: none;
+	fill: black;
+    fill-opacity: 0.125;
+}
+
+.brushBox {
+	fill-opacity: 0;
+	cursor: crosshair;
+}
+
+.timeSelection {
+    fill: green;
+    fill-opacity: 0.2;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+
+/*Zoom button styling*/
+.zoomControl {
+    display: inline-block;
+    overflow: hidden;
+
+    background: white;
+    background: rgba(255,255,255,0.8);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #CCCCCC;
+    border-radius: 5px;
+}
+
+.zoom.increase {
+    background-image: url("../img/sprites.png");
+    background-position: -155px -4px; 
+    /*background-color: green;*/
+    border-bottom: 1px solid #CCCCCC;
+
+    width: 40px;
+    height: 40px;
+}
+
+.zoom.decrease {
+    background-image: url("../img/sprites.png");
+    background-position: -204px -3px; 
+    /*background-color: red;*/
+    width: 40px;
+    height: 40px;
+}
+
+
+/*Tree panel styling*/
+.panelControl {
+    position: relative;
+    top: 12px;
+}
+
+.panelControl.collapseButton {
+    position: relative;
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    background-color: gray;
+    display: inline-block;
+}
+
+.panelControl.name {
+    position: relative;
+    top: 3px;
+    left: 5px;
+    display: inline-block;
+}
+
+div.treePanel {
+    min-height: 20px;
+    min-width: 100px;
+    clear:both;   
+    /*display: inline-block;*/
+}
+
+.treePanel.svgBox {
+    line-height: 0;
+    width: 750px;
+    height: 545px;
+    overflow-x: hidden;
+}
+
+
+/*Time panel*/
+.timeLine {
+    width: 750px;
+    height: 25px;
+    /*padding-right: 5px;*/
+    cursor: crosshair;
+}
+
+g.tick line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.timeLine path {
+    fill: none;
+    stroke: black;
+}
+
+.aimLine {
+    stroke: red;
+}
+
+.timeSlider {
+    position: relative;
+    cursor: col-resize;
+    background-image: url("../img/sprites.png");
+    background-position: -114px -14px;     
+    width: 18px;
+    height: 20px;      
+}
+
+.sliderBackground {
+    cursor: col-resize;
+    width: 750px;
+    height: 25px;
+}
+
+g.tick text {
+    pointer-events: none;
+}
+
+.playPauseButton {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #CCCCCC;
+    border-radius: 5px;
+    background-color: purple;
+    background: url('../img/sprites.png') -6px -5px;
+    width: 40px;
+    height: 40px;
+}
+
+.playPauseButton.playing {
+    background: url('../img/sprites.png') -54px -4px;
+}
+
+/*Trait and legend stylings*/
+
+.traitSelectionPanel {
+    width: 100px;
+    height: 70px;
+    display: inline-block;
+    border: 1px solid;
+}
+
+.traitRowText {
+    pointer-events: none;
+}
+
+.legendPanel {
+    width: 100px;
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: inline-block;
+    border: 1px solid;
+}
+
+.legendRowText {
+    pointer-events: none;
+}
+
+.traitPanel {
+    width: 300px;
+    height: 100px;
+    display: inline-block;
+    border: 1px solid;
+}
+
+.traitRowBackground {
+    fill-opacity: 0;
+}
+
+.traitRowBackground.selected {
+    fill: blue;
+    fill-opacity: 0.125;
+}
+
+/*Map styling*/
+#map {
+  width: 960px;
+  height: 500px;
+}
+
+.mapPath {
+    pointer-events: all;
+    fill: #000;
+    fill-opacity: .2;
+    stroke: #fff;
+    stroke-width: 1.5px;
+    shape-rendering: optimizeSpeed;
+}
+
+.mapHighlighted {
+    fill: orange;
+    fill-opacity: .2;
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+/*.mapPath:hover {
+  fill: red;
+  fill-opacity: .7;
+}*/
+
+.treeLayer {
+    pointer-events: none;
+}
+
+.locationLayer {
+    pointer-events: none;
+}
+
+circle.location {
+    fill: gray;
+    fill-opacity: 0.5;
+    stroke: black;
+    stroke-width: 1px;
+}
+
+.provinceLayer {
+    pointer-events: none;
+}
+
+.virusParticleLayer {
+    pointer-events: none;
+}
+
+.bubbleChartLayer {
+    pointer-events: none;
+}
+
+circle.bubble {
+    cursor: crosshair;
+    pointer-events: all;
+    fill: gray;
+    stroke: black;
+    stroke-width: 1px;
+}
+
+.bubbleTransLayer {
+    pointer-events: none;
+}
+
+.treeLayer path.chord {
+    fill: none;
+    stroke-opacity: 0.3;
+    stroke-width: 3px;
+}
+
+.info {
+    width: 100px;
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
