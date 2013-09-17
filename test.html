@@ -182,10 +182,10 @@ body {
     //script wrapped in a function to avoid polluting namespace
     (function() {
         var i,
-            contourFile = "data/MERS-CoV/reducedGeography.json",
-            centroidFile = "data/MERS-CoV/locations.csv",
+            contourFile = "data/test/reducedGeography.json",
+            centroidFile = "data/test/locations.csv",
             tileSource = "http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/998/256/{z}/{x}/{y}.png",
-            inputFiles = ["data/MERS-CoV/MERS-CoV_25.json"];
+            inputFiles = ["data/MERS-CoV/test.json"];
 
         var mapPanel = new pandemix.MapPanel;
         mapPanel.placePanel({target: "map", initCoords: [25.3833, 49.5833], initZoom: 5})
