@@ -193,7 +193,6 @@ body {
                 .loadCentroids(centroidFile)
                 .addInfoDisplay(function(d) {return "<h4>" + d.location + "</h4>" + d.number + (d.number > 1 ? " lineages" : " lineage")})
                 //.addLayer({layerType: pandemix.map.regionOutlineLayer, name: "Regions"})
-                .addLayer({layerType: pandemix.map.locationLayer, name: "Locations", displayedProperty: "location", unitRadius: 0.5, minRadius: 1, maxRadius: 50});
 
 		$( "#map-reset" ).click(function() {
 			mapPanel.getMap().setView([25.3833, 49.5833], 5);
@@ -230,8 +229,8 @@ body {
 
             })();            
         }
-
-		mapPanel.addLayer({layerType: pandemix.map.bubbleTransLayer, name: "Bubble transitions", radius: 1})
+        mapPanel.addLayer({layerType: pandemix.map.locationLayer, name: "Locations", displayedProperty: "location", unitRadius: 0.05, minRadius: 0.5, maxRadius: 2})
+				.addLayer({layerType: pandemix.map.bubbleTransLayer, name: "Bubble transitions", radius: 1})
                 .addLayer({layerType: pandemix.map.bubbleChartLayer, name: "Bubble chart", unitRadius: 1});
 
 		pandemix.when(function() {
