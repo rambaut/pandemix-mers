@@ -160,7 +160,6 @@ body {
 			<div id="legend" style="display: inline-block; vertical-align:top" ></div>
 		</div>
 		<button id="map-reset">Reset Map</button>
-		<button id="show-locations">Show Locations</button>
   </div>
 </div>
 <div class="panel" style="margin-top: 5px">
@@ -198,9 +197,6 @@ body {
 
 		$( "#map-reset" ).click(function() {
 			mapPanel.getMap().setView([25.3833, 49.5833], 5);
-		});
-		$( "#show-locations" ).click(function() {
-			pandemix.selectTrait("location");
 		});
 
         pandemix.addSearchBox({target: "#search"});
