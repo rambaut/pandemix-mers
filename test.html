@@ -239,7 +239,7 @@ body {
                 .addLayer({layerType: pandemix.map.bubbleChartLayer, name: "Bubble chart", unitRadius: 1});
 
 		pandemix.when(function() {
-				pandemix.panelsLoaded("treePanel");
+				return pandemix.panelsLoaded("treePanel");
 			}, function() {
 				pandemix.selectTrait("location");
 			}, 100);
